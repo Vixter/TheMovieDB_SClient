@@ -1,11 +1,14 @@
 package ru.vixter.themoviedbsimpleclient.model.themoviedb;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by winfe on 29.12.2015.
  */
-public class Movie {
+public class Movie implements Parcelable {
 
     @SerializedName("id") private String id;
     @SerializedName("title") private String title;
@@ -13,14 +16,43 @@ public class Movie {
     @SerializedName("backdrop_path") private String backdrop_path;
     @SerializedName("adult") private String adult;
     @SerializedName("overview") private String overview;
-    @SerializedName("genre_ids") private String[] genre_ids;
     @SerializedName("release_date") private String release_date;
     @SerializedName("original_title") private String original_title;
     @SerializedName("popularity") private double popularity;
     @SerializedName("vote_average") private double vote_average;
     @SerializedName("vote_count") private int vote_count;
     @SerializedName("poster_path") private String poster_path;
-    @SerializedName("video") private String video;
+
+    public Movie(){
+
+    }
+
+    protected Movie(Parcel in) {
+        id = in.readString();
+        title = in.readString();
+        original_language = in.readString();
+        backdrop_path = in.readString();
+        adult = in.readString();
+        overview = in.readString();
+        release_date = in.readString();
+        original_title = in.readString();
+        popularity = in.readDouble();
+        vote_average = in.readDouble();
+        vote_count = in.readInt();
+        poster_path = in.readString();
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -73,15 +105,6 @@ public class Movie {
 
     public Movie setOverview(String overview) {
         this.overview = overview;
-        return this;
-    }
-
-    public String[] getGenre_ids() {
-        return genre_ids;
-    }
-
-    public Movie setGenre_ids(String[] genre_ids) {
-        this.genre_ids = genre_ids;
         return this;
     }
 
@@ -139,18 +162,32 @@ public class Movie {
         return this;
     }
 
-    public String getVideo() {
-        return video;
-    }
-
-    public Movie setVideo(String video) {
-        this.video = video;
-        return this;
-    }
 
     @Override
     public String toString()
     {
-        return "Movie [vote_average = "+vote_average+", backdrop_path = "+backdrop_path+", adult = "+adult+", id = "+id+", title = "+title+", overview = "+overview+", original_language = "+original_language+", genre_ids = "+genre_ids+", release_date = "+release_date+", original_title = "+original_title+", vote_count = "+vote_count+", poster_path = "+poster_path+", video = "+video+", popularity = "+popularity+"]";
+        return "Movie [vote_average = "+vote_average+", backdrop_path = "+backdrop_path+", adult = "+adult+", id = "+id+", title = "+title+", overview = "+overview+", original_language = "+original_language+", release_date = "+release_date+", original_title = "+original_title+", vote_count = "+vote_count+", poster_path = "+poster_path+", popularity = "+popularity+"]";
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(title);
+        dest.writeString(original_language);
+        dest.writeString(backdrop_path);
+        dest.writeString(adult);
+        dest.writeString(overview);
+        dest.writeString(release_date);
+        dest.writeString(original_title);
+        dest.writeString(poster_path);
+        dest.writeInt(vote_count);
+        dest.writeDouble(popularity);
+        dest.writeDouble(vote_average);
+        dest.writeString(id);
     }
 }

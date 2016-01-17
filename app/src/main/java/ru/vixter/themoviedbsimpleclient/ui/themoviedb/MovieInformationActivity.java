@@ -34,12 +34,10 @@ public class MovieInformationActivity extends AppCompatActivity {
         imageView = (SimpleDraweeView) findViewById(R.id.view_image);
 
         // TODO: 15.01.16 extract to local public constants
-        textViewTitle.setText(getIntent().getStringExtra(Constants.EXTRA_MOVIE_TITLE));
 
-        Movie movieItem = MovieDatabaseHelper.getInstance(
-                MovieInformationActivity.this.getApplicationContext())
-                .getMovieItem(getIntent().getStringExtra(Constants.EXTRA_MOVIE_ID));
+        Movie movieItem = (Movie) getIntent().getParcelableExtra(Constants.EXTRA_MOVIE_PARCELABLE);
 
+        textViewTitle.setText(movieItem.getTitle());
         textViewScore.setText(String.valueOf(movieItem.getVote_average()));
         textViewAbout.setText(movieItem.getOverview());
         // TODO: 15.01.16 make const

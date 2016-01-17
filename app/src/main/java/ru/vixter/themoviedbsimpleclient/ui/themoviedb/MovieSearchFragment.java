@@ -31,9 +31,8 @@ public class MovieSearchFragment extends MovieBaseFragment {
 
             @Override
             public void onItemClick(View view, int position) {
-                startActivity(new Intent(view.getContext(), MovieInformationActivity.class)
-                        .putExtra(Constants.EXTRA_MOVIE_ID, movieAdapter.getMovieID(position))
-                        .putExtra(Constants.EXTRA_MOVIE_TITLE, movieAdapter.getMovieTitle(position)));
+                Movie movie = movieAdapter.getItem(position);
+                startActivity(new Intent(view.getContext(), MovieInformationActivity.class).putExtra(Constants.EXTRA_MOVIE_PARCELABLE, movie));
             }
 
         }));

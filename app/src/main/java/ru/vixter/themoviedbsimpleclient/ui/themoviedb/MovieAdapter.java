@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import ru.vixter.themoviedbsimpleclient.R;
 import ru.vixter.themoviedbsimpleclient.model.themoviedb.Movie;
 
@@ -33,13 +34,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.CardViewHold
     }
 
     public static class CardViewHolder extends RecyclerView.ViewHolder {
-        public TextView textView;
-        public SimpleDraweeView imageView;
+        @Bind(R.id.card_view_textview) public TextView textView;
+        @Bind(R.id.card_view_image) public SimpleDraweeView imageView;
 
         public CardViewHolder(final View item) {
             super(item);
-            this.textView = (TextView) item.findViewById(R.id.card_view_textview);
-            this.imageView = (SimpleDraweeView) item.findViewById(R.id.card_view_image);
+            ButterKnife.bind(this, item);
         }
 
     }
@@ -65,12 +65,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.CardViewHold
     }
 
     // TODO: 15.01.16 replace with getItem(position)
-    public String getMovieID(int position){
-        return movieArrayList.get(position).getId();
-    }
-
-    public String getMovieTitle(int position){
-        return movieArrayList.get(position).getTitle();
+    public Movie getItem(int position){
+        return movieArrayList.get(position);
     }
 
     @Override

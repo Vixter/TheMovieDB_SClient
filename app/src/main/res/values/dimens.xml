@@ -1,3 +1,7 @@
+<!--
+  ~ Copyright (c): Created by Vixter Infected on 17.1.2016.
+  -->
+
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>

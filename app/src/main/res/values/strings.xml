@@ -1,3 +1,26 @@
+<!--
+  ~ Copyright (c): Created by Vixter Infected on 17.1.2016.
+  -->
+
 <resources>
     <string name="app_name">TheMovieDB Simple Client</string>
+
+    <string name="public_key">d3afb28048ddaa9e158c59f8f5c6c027</string>
+    <string name="private_key">7b9e40233b7b7d947f73b4403e5bcdbff66453bc</string>
+
+    <string name="themoviedb_api_key">70177a9f8516400506ab579f4c9f443e</string>
+
+    <string name="nav_item_characters">Characters</string>
+    <string name="nav_item_comics">Comics</string>
+    <string name="nav_item_movies_discover">Discover</string>
+    <string name="nav_item_movies_popular">Popular</string>
+    <string name="nav_item_about">About</string>
+    <string name="nav_sub_menu">Sub Menu</string>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+
+    <string name="action_settings">Settings</string>
+
 </resources>

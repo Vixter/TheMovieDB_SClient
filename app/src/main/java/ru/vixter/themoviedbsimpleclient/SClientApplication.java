@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import com.facebook.drawee.backends.pipeline.Fresco;
 
 import ru.vixter.themoviedbsimpleclient.network.themoviedb.Params;
+import ru.vixter.themoviedbsimpleclient.network.themoviedb.RequestManager;
 
 /**
  * Created by vixter on 17.01.16.
@@ -19,6 +20,8 @@ public class SClientApplication extends Application {
         super.onCreate();
         Fresco.initialize(this.getApplicationContext());
         Params.API_KEY_VALUE = getString(R.string.themoviedb_api_key);
+        RequestManager.initialize(Params.API_KEY_VALUE);
+
     }
 
     public static boolean isConnectingToInternet(Context context){

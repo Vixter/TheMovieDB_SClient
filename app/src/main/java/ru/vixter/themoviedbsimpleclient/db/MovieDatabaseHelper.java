@@ -18,31 +18,24 @@ import ru.vixter.themoviedbsimpleclient.model.themoviedb.Movie;
 public class MovieDatabaseHelper extends SQLiteOpenHelper {
 
 
-    // TODO: Modificate all class;
-//    public interface Movies {
-//        TABLENAME///
-//        COLUMNNAME
-//                COLUMNRATING///
-//    }
-
     private static MovieDatabaseHelper sInstance;
 
     // Database Info
     private static final String DATABASE_NAME = "movieDatabase";
     private static final int DATABASE_VERSION = 1;
 
-    // Table Names
-    private static final String TABLE_MOVIES = "movies";
+    public interface Movies {
+        public static final String TABLE_NAME = "movies";
+        public static final String _ID = "id";
+        public static final String _TITLE = "title";
+        public static final String _BACKDROP = "backdrop_path";
+        public static final String _POSTER = "poster_path";
+        public static final String _POPULARITY = "popularity";
+        public static final String _VOTE_AVERAGE = "vote_average";
+        public static final String _RELEASE_DATE = "release_date";
+        public static final String _OVERVIEW = "overview";
 
-    // Movies Table Columns
-    private static final String MOVIE_ID = "id";
-    private static final String MOVIE_TITLE = "title";
-    private static final String MOVIE_BACKDROP = "backdrop_path";
-    private static final String MOVIE_POSTER = "poster_path";
-    private static final String MOVIE_POPULARITY = "popularity";
-    private static final String MOVIE_VOTE_AVERAGE = "vote_average";
-    private static final String MOVIE_RELEASE_DATE = "release_date";
-    private static final String MOVIE_OVERVIEW = "overview";
+    }
 
     private static final int PAGE_START_INDEX = 20;
     private static final int PAGE_END_INDEX = 40;
@@ -64,16 +57,16 @@ public class MovieDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_MOVIES_TABLE = "CREATE TABLE " + TABLE_MOVIES +
+        String CREATE_MOVIES_TABLE = "CREATE TABLE " + Movies.TABLE_NAME +
                 "(" +
-                MOVIE_ID + " INTEGER PRIMARY KEY," + // Define a primary key
-                MOVIE_TITLE + " TEXT, " +
-                MOVIE_BACKDROP + " TEXT, " +
-                MOVIE_POSTER + " TEXT, " +
-                MOVIE_POPULARITY + " REAL, " +
-                MOVIE_VOTE_AVERAGE + " REAL, " +
-                MOVIE_RELEASE_DATE + " TEXT, " +
-                MOVIE_OVERVIEW + " TEXT" +
+                Movies._ID + " INTEGER PRIMARY KEY," + // Define a primary key
+                Movies._TITLE + " TEXT, " +
+                Movies._BACKDROP + " TEXT, " +
+                Movies._POSTER + " TEXT, " +
+                Movies._POPULARITY + " REAL, " +
+                Movies._VOTE_AVERAGE + " REAL, " +
+                Movies._RELEASE_DATE + " TEXT, " +
+                Movies._OVERVIEW + " TEXT" +
                 ")";
 
         db.execSQL(CREATE_MOVIES_TABLE);
@@ -84,7 +77,7 @@ public class MovieDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion != newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_MOVIES);
+            db.execSQL("DROP TABLE IF EXISTS " + Movies.TABLE_NAME);
             onCreate(db);
         }
     }
@@ -96,16 +89,16 @@ public class MovieDatabaseHelper extends SQLiteOpenHelper {
         try {
 
             ContentValues values = new ContentValues();
-            values.put(MOVIE_ID, Integer.parseInt(movie.getId()));
-            values.put(MOVIE_TITLE, movie.getTitle());
-            values.put(MOVIE_POPULARITY, movie.getPopularity());
-            values.put(MOVIE_BACKDROP, movie.getBackdrop_path());
-            values.put(MOVIE_POSTER, movie.getPoster_path());
-            values.put(MOVIE_VOTE_AVERAGE, movie.getVote_average());
-            values.put(MOVIE_RELEASE_DATE, movie.getRelease_date());
-            values.put(MOVIE_OVERVIEW, movie.getOverview());
+            values.put(Movies._ID, Integer.parseInt(movie.getId()));
+            values.put(Movies._TITLE, movie.getTitle());
+            values.put(Movies._POPULARITY, movie.getPopularity());
+            values.put(Movies._BACKDROP, movie.getBackdrop_path());
+            values.put(Movies._POSTER, movie.getPoster_path());
+            values.put(Movies._VOTE_AVERAGE, movie.getVote_average());
+            values.put(Movies._RELEASE_DATE, movie.getRelease_date());
+            values.put(Movies._OVERVIEW, movie.getOverview());
 
-            db.insertOrThrow(TABLE_MOVIES, null, values);
+            db.insertOrThrow(Movies.TABLE_NAME, null, values);
             db.setTransactionSuccessful();
         }catch (Exception e){
             e.printStackTrace();
@@ -123,10 +116,9 @@ public class MovieDatabaseHelper extends SQLiteOpenHelper {
         List<Movie> movies = new ArrayList<>();
         String MOVIE_SELECT_QUERY = null;
         if(byPopularity){
-            // TODO: 15.01.16 extract all queries to another class as constants
-            MOVIE_SELECT_QUERY = String.format(Queries.QUERIE_SELECT_ALL_FROM_s_ORDER_BY_s , TABLE_MOVIES, MOVIE_VOTE_AVERAGE);
+            MOVIE_SELECT_QUERY = String.format(Queries.QUERIE_SELECT_ALL_FROM_s_ORDER_BY_s , Movies.TABLE_NAME, Movies._VOTE_AVERAGE);
         }else {
-            MOVIE_SELECT_QUERY = String.format(Queries.QUERIE_SELECT_ALL_FROM_s , TABLE_MOVIES);
+            MOVIE_SELECT_QUERY = String.format(Queries.QUERIE_SELECT_ALL_FROM_s , Movies.TABLE_NAME);
         }
 
         SQLiteDatabase db = getReadableDatabase();
@@ -163,7 +155,7 @@ public class MovieDatabaseHelper extends SQLiteOpenHelper {
 
     public List<Movie> serchByTitle(String query){
         List<Movie> movies = new ArrayList<>();
-        String MOVIE_SELECT_QUERY = String.format(Queries.QUERIE_SELECT_ALL_FROM_s_WHERE_s_LIKE_s, TABLE_MOVIES, MOVIE_TITLE, query+'%');
+        String MOVIE_SELECT_QUERY = String.format(Queries.QUERIE_SELECT_ALL_FROM_s_WHERE_s_LIKE_s, Movies.TABLE_NAME, Movies._TITLE, query+'%');
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(MOVIE_SELECT_QUERY, null);
@@ -186,7 +178,7 @@ public class MovieDatabaseHelper extends SQLiteOpenHelper {
 
     public Movie getMovieItem(String id){
         Movie movie = null;
-        String MOVIE_SELECT_QUERY = String.format(Queries.QUERIE_SELECT_ALL_FROM_s_WHERE_s_LIKE_s, TABLE_MOVIES, MOVIE_ID, id);
+        String MOVIE_SELECT_QUERY = String.format(Queries.QUERIE_SELECT_ALL_FROM_s_WHERE_s_LIKE_s, Movies.TABLE_NAME, Movies._ID, id);
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(MOVIE_SELECT_QUERY, null);
@@ -207,13 +199,13 @@ public class MovieDatabaseHelper extends SQLiteOpenHelper {
 
     private Movie getMovieFromCursor(Cursor cursor) {
         return new Movie()
-                .setId(String.valueOf(cursor.getInt(cursor.getColumnIndex(MOVIE_ID))))
-                .setBackdrop_path(cursor.getString(cursor.getColumnIndex(MOVIE_BACKDROP)))
-                .setPopularity(cursor.getDouble(cursor.getColumnIndex(MOVIE_POPULARITY)))
-                .setPoster_path(cursor.getString(cursor.getColumnIndex(MOVIE_POSTER)))
-                .setTitle(cursor.getString(cursor.getColumnIndex(MOVIE_TITLE)))
-                .setVote_average(cursor.getDouble(cursor.getColumnIndex(MOVIE_VOTE_AVERAGE)))
-                .setRelease_date(cursor.getString(cursor.getColumnIndex(MOVIE_RELEASE_DATE)))
-                .setOverview(cursor.getString(cursor.getColumnIndex(MOVIE_OVERVIEW)));
+                .setId(String.valueOf(cursor.getInt(cursor.getColumnIndex(Movies._ID))))
+                .setBackdrop_path(cursor.getString(cursor.getColumnIndex(Movies._BACKDROP)))
+                .setPopularity(cursor.getDouble(cursor.getColumnIndex(Movies._POPULARITY)))
+                .setPoster_path(cursor.getString(cursor.getColumnIndex(Movies._POSTER)))
+                .setTitle(cursor.getString(cursor.getColumnIndex(Movies._TITLE)))
+                .setVote_average(cursor.getDouble(cursor.getColumnIndex(Movies._VOTE_AVERAGE)))
+                .setRelease_date(cursor.getString(cursor.getColumnIndex(Movies._RELEASE_DATE)))
+                .setOverview(cursor.getString(cursor.getColumnIndex(Movies._OVERVIEW)));
     }
 }

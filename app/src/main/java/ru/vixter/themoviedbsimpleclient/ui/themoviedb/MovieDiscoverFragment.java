@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,9 +16,13 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 import ru.vixter.themoviedbsimpleclient.R;
+import ru.vixter.themoviedbsimpleclient.SClientApplication;
+import ru.vixter.themoviedbsimpleclient.db.MovieDatabaseHelper;
 import ru.vixter.themoviedbsimpleclient.model.themoviedb.ListMovie;
 import ru.vixter.themoviedbsimpleclient.model.themoviedb.Movie;
+import ru.vixter.themoviedbsimpleclient.network.themoviedb.BaseCallback;
 import ru.vixter.themoviedbsimpleclient.network.themoviedb.Params;
+import ru.vixter.themoviedbsimpleclient.network.themoviedb.RequestManager;
 import ru.vixter.themoviedbsimpleclient.ui.EndlessRecyclerViewScrollListener;
 import ru.vixter.themoviedbsimpleclient.utils.Date;
 
@@ -31,6 +36,7 @@ public class MovieDiscoverFragment extends MovieBaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initFragment(view);
 
         c.setTime(new java.util.Date());
         c.add(Calendar.MONTH, -1);
@@ -38,9 +44,29 @@ public class MovieDiscoverFragment extends MovieBaseFragment {
         initRecyclerView(view);
         if (isActiveNetwork)restRequest.getResentMovies(1,
                 Date.DateToUTCString(c.getTime(), "yyyy'-'MM'-'dd"),
-                Date.DateToUTCString(new java.util.Date(), "yyyy'-'MM'-'dd")).enqueue(MovieDiscoverFragment.this);
+                Date.DateToUTCString(new java.util.Date(), "yyyy'-'MM'-'dd")).enqueue(baseCallback);
         else movieAdapter.addAll(new ArrayList<Movie>(databaseHelper.getMoviesToDescribe(0)));
 
+    }
+
+    private void initFragment(View view){
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        databaseHelper = MovieDatabaseHelper.getInstance(getContext());
+        restRequest = RequestManager.getMoviesService();
+        movieAdapter = new MovieAdapter(getContext());
+        isActiveNetwork = SClientApplication.isConnectingToInternet(getContext().getApplicationContext());
+        baseCallback = new BaseCallback() {
+            @Override
+            public void onSuccess(List<Movie> list) {
+                movieAdapter.addAll(list);
+                databaseHelper.addAllMovies(list);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        };
     }
 
     private void initRecyclerView(View view){
@@ -53,7 +79,7 @@ public class MovieDiscoverFragment extends MovieBaseFragment {
                 if (isActiveNetwork) {
                     restRequest.getResentMovies(1,
                             Date.DateToUTCString(c.getTime(), "yyyy'-'MM'-'dd"),
-                            Date.DateToUTCString(new java.util.Date(), "yyyy'-'MM'-'dd")).enqueue(MovieDiscoverFragment.this);
+                            Date.DateToUTCString(new java.util.Date(), "yyyy'-'MM'-'dd")).enqueue(baseCallback);
                 } else {
                     movieAdapter.addAll(new ArrayList<Movie>(databaseHelper.getMoviesToDescribe(page)));
                 }
@@ -69,12 +95,5 @@ public class MovieDiscoverFragment extends MovieBaseFragment {
 
         }));
     }
-
-    @Override
-    public void onSuccess(List<Movie> list) {
-        movieAdapter.addAll(list);
-        databaseHelper.addAllMovies(list);
-    }
-
 
 }

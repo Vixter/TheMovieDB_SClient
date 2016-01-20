@@ -14,14 +14,19 @@ import retrofit.Retrofit;
 /**
  * Created by vixter on 17.01.16.
  */
-public class RequestManager {;
+public class RequestManager {
+    private static RequestManager requestManager;
     private final String API_KEY;
     private Retrofit retrofit;
     private final MoviesService moviesService;
 
     // TODO: 15.01.16 make singleton and initialize
 
-    public RequestManager(String API_KEY){
+    public static void initialize(String api_key){
+        requestManager = new RequestManager(api_key);
+    }
+
+    private RequestManager(String API_KEY){
         this.API_KEY = API_KEY;
         retrofit = new Retrofit.Builder().baseUrl(Params.BASE_URL)
                 .client(new OkHttpClient())
@@ -33,17 +38,8 @@ public class RequestManager {;
         moviesService = retrofit.create(MoviesService.class);
     }
 
-    public MoviesService getMoviesService() {
-        return moviesService;
-    }
-
-    // TODO: 15.01.16 replace call this to call getMoviesService
-    public Retrofit getRetrofit() {
-        return retrofit;
-    }
-
-    public String getAPI_KEY() {
-        return API_KEY;
+    public static MoviesService getMoviesService() {
+        return requestManager.moviesService;
     }
 
     private static class AuthInterceptor implements Interceptor {

@@ -5,15 +5,18 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit.Callback;
 import ru.vixter.themoviedbsimpleclient.R;
-import ru.vixter.themoviedbsimpleclient.model.themoviedb.ListMovie;
+import ru.vixter.themoviedbsimpleclient.SClientApplication;
+import ru.vixter.themoviedbsimpleclient.db.MovieDatabaseHelper;
 import ru.vixter.themoviedbsimpleclient.model.themoviedb.Movie;
+import ru.vixter.themoviedbsimpleclient.network.themoviedb.BaseCallback;
 import ru.vixter.themoviedbsimpleclient.network.themoviedb.Params;
+import ru.vixter.themoviedbsimpleclient.network.themoviedb.RequestManager;
 import ru.vixter.themoviedbsimpleclient.ui.EndlessRecyclerViewScrollListener;
 
 /**
@@ -25,10 +28,31 @@ public class MoviePopularFragment extends MovieBaseFragment{
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        initFragment(view);
         initRecyclerView(view);
-        if (isActiveNetwork) restRequest.getPopularMovies(1, Params.PARAM_SORT_BY_POPULARITY).enqueue(this);
+        if (isActiveNetwork) restRequest.getPopularMovies(1, Params.PARAM_SORT_BY_POPULARITY).enqueue(baseCallback);
         else movieAdapter.addAll(new ArrayList<Movie>(databaseHelper.getMoviesByPopularity(0)));
 
+    }
+
+    private void initFragment(View view){
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        databaseHelper = MovieDatabaseHelper.getInstance(getContext());
+        restRequest = RequestManager.getMoviesService();
+        movieAdapter = new MovieAdapter(getContext());
+        isActiveNetwork = SClientApplication.isConnectingToInternet(getContext().getApplicationContext());
+        baseCallback = new BaseCallback() {
+            @Override
+            public void onSuccess(List<Movie> list) {
+                movieAdapter.addAll(list);
+                databaseHelper.addAllMovies(list);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        };
     }
 
     private void initRecyclerView(View view){
@@ -38,8 +62,8 @@ public class MoviePopularFragment extends MovieBaseFragment{
         recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(gridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                if (isActiveNetwork){
-                    restRequest.getPopularMovies(page + 1, Params.PARAM_SORT_BY_POPULARITY).enqueue(MoviePopularFragment.this);
+                if (isActiveNetwork) {
+                    restRequest.getPopularMovies(page + 1, Params.PARAM_SORT_BY_POPULARITY).enqueue(baseCallback);
                 } else {
                     movieAdapter.addAll(new ArrayList<Movie>(databaseHelper.getMoviesByPopularity(page)));
                 }
@@ -54,11 +78,5 @@ public class MoviePopularFragment extends MovieBaseFragment{
             }
 
         }));
-    }
-
-    @Override
-    public void onSuccess(List<Movie> list) {
-        movieAdapter.addAll(list);
-        databaseHelper.addAllMovies(list);
     }
 }

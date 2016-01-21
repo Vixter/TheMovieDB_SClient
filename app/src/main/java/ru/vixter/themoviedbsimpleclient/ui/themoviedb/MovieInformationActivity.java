@@ -33,14 +33,11 @@ public class MovieInformationActivity extends AppCompatActivity {
         textViewAbout = (TextView) findViewById(R.id.textAbout);
         imageView = (SimpleDraweeView) findViewById(R.id.view_image);
 
-        // TODO: 15.01.16 extract to local public constants
-
         Movie movieItem = (Movie) getIntent().getParcelableExtra(Constants.EXTRA_MOVIE_PARCELABLE);
 
         textViewTitle.setText(movieItem.getTitle());
         textViewScore.setText(String.valueOf(movieItem.getVote_average()));
         textViewAbout.setText(movieItem.getOverview());
-        // TODO: 15.01.16 make const
         imageView.setImageURI(Uri.withAppendedPath(Constants.basePosterUrl, movieItem.getBackdrop_path()));
     }
 }

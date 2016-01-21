@@ -54,7 +54,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.CardViewHold
         Movie item = movieArrayList.get(position);
         holder.textView.setText(item.getTitle());
 
-        // TODO: 15.01.16 check how this work
         holder.imageView.setImageURI(Uri.withAppendedPath(Constants.basePosterUrl, item.getPoster_path()));
     }
 
@@ -64,7 +63,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.CardViewHold
         notifyItemRangeInserted(curSize, getItemCount());
     }
 
-    // TODO: 15.01.16 replace with getItem(position)
     public Movie getItem(int position){
         return movieArrayList.get(position);
     }

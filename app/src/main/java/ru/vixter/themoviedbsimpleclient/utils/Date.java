@@ -10,10 +10,17 @@ public class Date {
 
     public final static String YEAR_MONTH_DAY = "yyyy'-'MM'-'dd";
 
-    public static String DateToUTCString(java.util.Date date, String dataformat) {
-        // TODO: 15.01.16 read about ThreadLocal
-        final SimpleDateFormat fmt = new SimpleDateFormat(dataformat);
-        return fmt.format(date);
+    private static final ThreadLocal<SimpleDateFormat> simpleDateFormater = new ThreadLocal<SimpleDateFormat>(){
+        @Override
+        protected SimpleDateFormat initialValue()
+        {
+            return new SimpleDateFormat(Date.YEAR_MONTH_DAY);
+        }
+    };
+
+    public String formatData(Date date)
+    {
+        return simpleDateFormater.get().format(date);
     }
 
 }

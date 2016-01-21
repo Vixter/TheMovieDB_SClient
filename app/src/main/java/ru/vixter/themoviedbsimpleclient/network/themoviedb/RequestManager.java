@@ -15,31 +15,27 @@ import retrofit.Retrofit;
  * Created by vixter on 17.01.16.
  */
 public class RequestManager {
-    private static RequestManager requestManager;
-    private final String API_KEY;
-    private Retrofit retrofit;
-    private final MoviesService moviesService;
 
     // TODO: 15.01.16 make singleton and initialize
 
-    public static void initialize(String api_key){
-        requestManager = new RequestManager(api_key);
+    private static class RequestManagerHolder{
+        private static MoviesService moviesService;
     }
 
-    private RequestManager(String API_KEY){
-        this.API_KEY = API_KEY;
-        retrofit = new Retrofit.Builder().baseUrl(Params.BASE_URL)
+    public static void initialize(String API_KEY){
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(Params.BASE_URL)
                 .client(new OkHttpClient())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         OkHttpClient client = retrofit.client();
         client.interceptors().add(new AuthInterceptor(API_KEY));
 
-        moviesService = retrofit.create(MoviesService.class);
+        RequestManagerHolder.moviesService = retrofit.create(MoviesService.class);
     }
 
     public static MoviesService getMoviesService() {
-        return requestManager.moviesService;
+        if(RequestManagerHolder.moviesService == null) new NullPointerException("RequestManager is not initialise");
+        return RequestManagerHolder.moviesService;
     }
 
     private static class AuthInterceptor implements Interceptor {

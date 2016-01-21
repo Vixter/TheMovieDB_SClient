@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (IllegalAccessException e) {
             // teg обязательно
             Log.e("MainActivity","", e);
-            e.printStackTrace();
         }
     }
 

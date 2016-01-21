@@ -14,12 +14,20 @@ import ru.vixter.themoviedbsimpleclient.SClientApplication;
 import ru.vixter.themoviedbsimpleclient.db.MovieDatabaseHelper;
 import ru.vixter.themoviedbsimpleclient.model.themoviedb.Movie;
 import ru.vixter.themoviedbsimpleclient.network.themoviedb.BaseCallback;
+import ru.vixter.themoviedbsimpleclient.network.themoviedb.MoviesService;
 import ru.vixter.themoviedbsimpleclient.network.themoviedb.RequestManager;
 
 /**
  * Created by vixter on 17.01.16.
  */
 public class MovieSearchFragment extends MovieBaseFragment {
+
+    boolean isActiveNetwork;
+    RecyclerView recyclerView;
+    MovieAdapter movieAdapter;
+    MoviesService restRequest;
+    MovieDatabaseHelper databaseHelper;
+    BaseCallback baseCallback;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

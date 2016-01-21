@@ -21,6 +21,7 @@ import ru.vixter.themoviedbsimpleclient.db.MovieDatabaseHelper;
 import ru.vixter.themoviedbsimpleclient.model.themoviedb.ListMovie;
 import ru.vixter.themoviedbsimpleclient.model.themoviedb.Movie;
 import ru.vixter.themoviedbsimpleclient.network.themoviedb.BaseCallback;
+import ru.vixter.themoviedbsimpleclient.network.themoviedb.MoviesService;
 import ru.vixter.themoviedbsimpleclient.network.themoviedb.Params;
 import ru.vixter.themoviedbsimpleclient.network.themoviedb.RequestManager;
 import ru.vixter.themoviedbsimpleclient.ui.EndlessRecyclerViewScrollListener;
@@ -32,6 +33,12 @@ import ru.vixter.themoviedbsimpleclient.utils.Date;
 public class MovieDiscoverFragment extends MovieBaseFragment {
 
     Calendar c = Calendar.getInstance();
+    boolean isActiveNetwork;
+    RecyclerView recyclerView;
+    MovieAdapter movieAdapter;
+    MoviesService restRequest;
+    MovieDatabaseHelper databaseHelper;
+    BaseCallback baseCallback;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

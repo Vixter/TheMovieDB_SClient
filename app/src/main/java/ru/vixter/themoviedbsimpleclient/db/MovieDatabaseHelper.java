@@ -129,8 +129,8 @@ public class MovieDatabaseHelper extends SQLiteOpenHelper {
                 int count = 0;
                 do {
                     // TODO: 15.01.16 magic constants
-                    if(count < ((page) * PAGE_START_INDEX)) continue;
-                    if (count > ((page) * PAGE_END_INDEX)) break;
+                    if(count < getStartItemPocition(page)) continue;
+                    if (count > getEndItemPocition(page)) break;
                     movies.add(getMovieFromCursor(cursor));
                     count++;
                 } while(cursor.moveToNext());
@@ -143,6 +143,14 @@ public class MovieDatabaseHelper extends SQLiteOpenHelper {
             }
         }
         return movies;
+    }
+
+    private int getStartItemPocition(int page){
+        return page * PAGE_START_INDEX;
+    }
+
+    private int getEndItemPocition(int page){
+        return page * PAGE_END_INDEX;
     }
 
     public List<Movie> getMoviesByPopularity(int page){

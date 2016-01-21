@@ -15,6 +15,7 @@ import ru.vixter.themoviedbsimpleclient.SClientApplication;
 import ru.vixter.themoviedbsimpleclient.db.MovieDatabaseHelper;
 import ru.vixter.themoviedbsimpleclient.model.themoviedb.Movie;
 import ru.vixter.themoviedbsimpleclient.network.themoviedb.BaseCallback;
+import ru.vixter.themoviedbsimpleclient.network.themoviedb.MoviesService;
 import ru.vixter.themoviedbsimpleclient.network.themoviedb.Params;
 import ru.vixter.themoviedbsimpleclient.network.themoviedb.RequestManager;
 import ru.vixter.themoviedbsimpleclient.ui.EndlessRecyclerViewScrollListener;
@@ -23,6 +24,13 @@ import ru.vixter.themoviedbsimpleclient.ui.EndlessRecyclerViewScrollListener;
  * Created by vixter on 17.01.16.
  */
 public class MoviePopularFragment extends MovieBaseFragment{
+
+    boolean isActiveNetwork;
+    RecyclerView recyclerView;
+    MovieAdapter movieAdapter;
+    MoviesService restRequest;
+    MovieDatabaseHelper databaseHelper;
+    BaseCallback baseCallback;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

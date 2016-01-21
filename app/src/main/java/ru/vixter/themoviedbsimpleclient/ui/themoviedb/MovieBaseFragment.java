@@ -28,13 +28,6 @@ import ru.vixter.themoviedbsimpleclient.network.themoviedb.RequestManager;
  */
 public class MovieBaseFragment extends Fragment{
 
-    boolean isActiveNetwork;
-    RecyclerView recyclerView;
-    MovieAdapter movieAdapter;
-    MoviesService restRequest;
-    MovieDatabaseHelper databaseHelper;
-    BaseCallback baseCallback;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_movies, container, false);

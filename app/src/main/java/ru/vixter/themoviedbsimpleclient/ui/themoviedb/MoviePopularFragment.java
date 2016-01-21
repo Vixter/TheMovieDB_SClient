@@ -46,7 +46,7 @@ public class MoviePopularFragment extends MovieBaseFragment{
     private void initFragment(View view){
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         databaseHelper = MovieDatabaseHelper.getInstance(getContext());
-        restRequest = RequestManager.getMoviesService();
+        restRequest = RequestManager.getInstance().getMoviesService();
         movieAdapter = new MovieAdapter(getContext());
         isActiveNetwork = SClientApplication.isConnectingToInternet(getContext().getApplicationContext());
         baseCallback = new BaseCallback() {

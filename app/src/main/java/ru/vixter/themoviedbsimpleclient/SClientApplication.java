@@ -20,7 +20,7 @@ public class SClientApplication extends Application {
         super.onCreate();
         Fresco.initialize(this.getApplicationContext());
         Params.API_KEY_VALUE = getString(R.string.themoviedb_api_key);
-        RequestManager.initialize(Params.API_KEY_VALUE);
+        RequestManager.getInstance().initialize();
 
     }
 

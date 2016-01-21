@@ -14,15 +14,18 @@ import retrofit.Retrofit;
 /**
  * Created by vixter on 17.01.16.
  */
-public class RequestManager {
+public final class RequestManager {
+    //Singleton
+    private final static RequestManager INSTANCE = new RequestManager();
 
-    // TODO: 15.01.16 make singleton and initialize
+    private static final String API_KEY = "70177a9f8516400506ab579f4c9f443e";
 
-    private static class RequestManagerHolder{
-        private static MoviesService moviesService;
+    private MoviesService moviesService;
+
+    private RequestManager(){
     }
 
-    public static void initialize(String API_KEY){
+    public void initialize(){
         Retrofit retrofit = new Retrofit.Builder().baseUrl(Params.BASE_URL)
                 .client(new OkHttpClient())
                 .addConverterFactory(GsonConverterFactory.create())
@@ -30,15 +33,21 @@ public class RequestManager {
         OkHttpClient client = retrofit.client();
         client.interceptors().add(new AuthInterceptor(API_KEY));
 
-        RequestManagerHolder.moviesService = retrofit.create(MoviesService.class);
+        INSTANCE.moviesService = retrofit.create(MoviesService.class);
     }
 
-    public static MoviesService getMoviesService() {
-        if(RequestManagerHolder.moviesService == null) new NullPointerException("RequestManager is not initialise");
-        return RequestManagerHolder.moviesService;
+    public static RequestManager getInstance(){
+         return INSTANCE;
     }
 
-    private static class AuthInterceptor implements Interceptor {
+    public MoviesService getMoviesService() {
+        if(INSTANCE.moviesService == null) {
+            throw new IllegalStateException("RequestManager is not initialise");
+        }
+        return INSTANCE.moviesService;
+    }
+
+    private static final class AuthInterceptor implements Interceptor {
         private final String API_KEY;
 
         AuthInterceptor(String API_KEY) {

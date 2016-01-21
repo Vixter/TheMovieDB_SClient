@@ -43,9 +43,9 @@ public class MovieDiscoverFragment extends MovieBaseFragment {
 
         initRecyclerView(view);
         if (isActiveNetwork)restRequest.getResentMovies(1,
-                Date.DateToUTCString(c.getTime(), "yyyy'-'MM'-'dd"),
-                Date.DateToUTCString(new java.util.Date(), "yyyy'-'MM'-'dd")).enqueue(baseCallback);
-        else movieAdapter.addAll(new ArrayList<Movie>(databaseHelper.getMoviesToDescribe(0)));
+                Date.formatData(c.getTime()),
+                Date.formatData(new java.util.Date())).enqueue(baseCallback);
+        else movieAdapter.addAll(new ArrayList<>(databaseHelper.getMoviesToDescribe(0)));
 
     }
 
@@ -78,10 +78,10 @@ public class MovieDiscoverFragment extends MovieBaseFragment {
             public void onLoadMore(int page, int totalItemsCount) {
                 if (isActiveNetwork) {
                     restRequest.getResentMovies(1,
-                            Date.DateToUTCString(c.getTime(), "yyyy'-'MM'-'dd"),
-                            Date.DateToUTCString(new java.util.Date(), "yyyy'-'MM'-'dd")).enqueue(baseCallback);
+                            Date.formatData(c.getTime()),
+                            Date.formatData(new java.util.Date())).enqueue(baseCallback);
                 } else {
-                    movieAdapter.addAll(new ArrayList<Movie>(databaseHelper.getMoviesToDescribe(page)));
+                    movieAdapter.addAll(new ArrayList<>(databaseHelper.getMoviesToDescribe(page)));
                 }
             }
         });

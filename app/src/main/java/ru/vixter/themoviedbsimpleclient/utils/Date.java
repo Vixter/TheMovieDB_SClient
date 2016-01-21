@@ -3,9 +3,7 @@ package ru.vixter.themoviedbsimpleclient.utils;
 
 import java.text.SimpleDateFormat;
 
-/**
- * Created by winfe on 31.12.2015.
- */
+
 public class Date {
 
     public final static String YEAR_MONTH_DAY = "yyyy'-'MM'-'dd";
@@ -18,7 +16,7 @@ public class Date {
         }
     };
 
-    public String formatData(Date date)
+    public static String formatData(java.util.Date date)
     {
         return simpleDateFormater.get().format(date);
     }

@@ -21,7 +21,7 @@ public abstract class BaseCallback implements Callback<ListMovie> {
 
         switch (response.code()){
             case 200:
-                if(response.body() == null)
+                if(response.body() != null)
                     onSuccess(response.body().getResults());
                 else onFailure(new Throwable("Request body is null."));
                 break;

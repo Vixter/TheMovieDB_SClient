@@ -21,8 +21,10 @@ public class MovieDatabaseHelper extends SQLiteOpenHelper {
     private static MovieDatabaseHelper sInstance;
 
     // Database Info
-    private static final String DATABASE_NAME = "movieDatabase";
-    private static final int DATABASE_VERSION = 1;
+    public interface DataBase{
+        public static final String _NAME = "movieDatabase";
+        public static final int _VERSION = 2;
+    }
 
     public interface Movies {
         public static final String TABLE_NAME = "movies";
@@ -52,7 +54,7 @@ public class MovieDatabaseHelper extends SQLiteOpenHelper {
 
 
     public MovieDatabaseHelper(Context context){
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DataBase._NAME, null, DataBase._VERSION);
     }
 
     @Override
